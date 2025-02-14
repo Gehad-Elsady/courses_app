@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CoursesModel {
   String name;
   String image;
@@ -18,6 +20,8 @@ class CoursesModel {
   String lectureDuration;
   String courseOwnerImage;
   String numberOfLecturesInWeek;
+  Timestamp createdAt;
+  String ableToShare;
 
   CoursesModel(
       {required this.name,
@@ -38,6 +42,8 @@ class CoursesModel {
       required this.lectureDuration,
       required this.courseOwnerImage,
       required this.numberOfLecturesInWeek,
+      required this.createdAt,
+      required this.ableToShare,
       required this.price});
   factory CoursesModel.fromJson(Map<dynamic, dynamic> json) => CoursesModel(
         name: json['name'], //
@@ -59,6 +65,8 @@ class CoursesModel {
         lectureDuration: json['lectureDuration'], //
         courseOwnerImage: json['courseOwnerImage'],
         numberOfLecturesInWeek: json['numberOfLecturesInWeek'], //
+        createdAt: json['createdAt'], //
+        ableToShare: json['ableToShare'], //
       );
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -80,5 +88,7 @@ class CoursesModel {
         'lectureDuration': lectureDuration,
         'courseOwnerImage': courseOwnerImage,
         'numberOfLecturesInWeek': numberOfLecturesInWeek,
+        'createdAt': createdAt,
+        'ableToShare': ableToShare,
       };
 }

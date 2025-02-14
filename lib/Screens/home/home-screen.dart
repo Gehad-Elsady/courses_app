@@ -1,6 +1,7 @@
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
 import 'package:courses_app/Screens/Search/search_screen.dart';
 import 'package:courses_app/Screens/home/tabs/home_tab.dart';
+import 'package:courses_app/Screens/home/tabs/settings_tab.dart';
 import 'package:courses_app/Screens/home/test.dart';
 import 'package:courses_app/Screens/home/widget/ads_part.dart';
 import 'package:courses_app/Screens/home/widget/categories_part.dart';
@@ -63,12 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
               outlinedIcon: Icons.home_outlined,
             ),
             BarItem(
-                filledIcon: Icons.person_rounded,
-                outlinedIcon: Icons.person_outline_rounded),
-            BarItem(
               filledIcon: Icons.ondemand_video_rounded,
               outlinedIcon: Icons.ondemand_video_rounded,
             ),
+            BarItem(
+                filledIcon: Icons.person_rounded,
+                outlinedIcon: Icons.person_outline_rounded),
           ],
         ),
       ),
@@ -86,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> screens = [
     CoursesSearchPage(),
-    HomeTab(), // HomeTab is at index 1
-    StudentProfile(),
-    Test1()
+    HomeTab(),
+    Test1(), // HomeTab is at index 1
+    SettingsTab(),
   ];
 }

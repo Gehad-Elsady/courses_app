@@ -138,8 +138,10 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
+          backgroundColor: Color(0xFF90E0EF),
+          elevation: 5,
+          shadowColor: Color(0xff03045E),
           centerTitle: true,
-          backgroundColor: Colors.white,
           title: Text(
             'Add Course',
             style: GoogleFonts.domine(
@@ -150,133 +152,151 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           )),
       body: Stack(
         children: [
-          Image.network(
-            "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            height: double.infinity,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          Container(color: Colors.black.withOpacity(0.5)),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildTextField(
-                      _nameController, 'Course Name', "Course Name"),
-                  _buildTextField(_descriptionController, 'Description',
-                      "Course Description",
-                      maxLines: 3),
-                  _buildTextField(_whatWillLearnController,
-                      'What Will You Learn', "Benefits Of The Course",
-                      maxLines: 3),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTextField(
-                          _numberOfLecturesController,
-                          'Number of Lectures',
-                          "Lectures of the Course",
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: _buildTextField(_lectureDurationController,
-                            'Lecture Duration', "Duration in minutes "),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTextField(
-                          _numberOfLearnersInWeekController,
-                          'Lecture in Week',
-                          "Number of Lectures",
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: _buildTextField(
-                            _priceController, 'Price', "Total Price",
-                            inputType: TextInputType.number),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: _buildTextField(_durationController,
-                              'Duration', "Duration in days")),
-                      SizedBox(width: 16),
-                      Expanded(
-                          child: _buildTextField(_courseLanguageController,
-                              'Course Language', "Course Language")),
-                    ],
-                  ),
-                  _buildDropdownField(
-                      'Course Field',
-                      _courseFields,
-                      _selectedCourseField,
-                      (value) => setState(() => _selectedCourseField = value)),
-                  _buildDropdownField(
-                      'Course Level',
-                      _courseLevels,
-                      _selectedCourseLevel,
-                      (value) => setState(() => _selectedCourseLevel = value)),
-                  _buildTextField(_requirementsController, 'Requirements',
-                      "What needs to enroll"),
-                  _buildTextField(_afterCourseController,
-                      'After Course Benefits', "Benefits after the course"),
-                  SizedBox(height: 16),
-                  _image == null
-                      ? _buildNoImageSelected()
-                      : Image.file(_image!, height: 150, fit: BoxFit.cover),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _pickImage,
-                    child: Text(
-                      'Pick Image',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      textStyle: TextStyle(fontSize: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  _isUploading
-                      ? Center(child: CircularProgressIndicator())
-                      : ElevatedButton(
-                          onPressed: _saveCourse,
-                          child: Text(
-                            'Add Course',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            textStyle: TextStyle(fontSize: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                        ),
+          // Image.network(
+          //   "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          //   height: double.infinity,
+          //   width: double.infinity,
+          //   fit: BoxFit.cover,
+          // ),
+          // Container(color: Colors.black.withOpacity(0.5)),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFADE8F4),
+                  Color(0xFFCAF0F8),
+                  Color(0xFF90E0EF),
+                  Color(0xFF90E0EF),
+                  Color(0xFF48CAE4),
                 ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildTextField(
+                        _nameController, 'Course Name', "Course Name"),
+                    _buildTextField(_descriptionController, 'Description',
+                        "Course Description",
+                        maxLines: 3),
+                    _buildTextField(_whatWillLearnController,
+                        'What Will You Learn', "Benefits Of The Course",
+                        maxLines: 3),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            _numberOfLecturesController,
+                            'Number of Lectures',
+                            "Lectures of the Course",
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: _buildTextField(_lectureDurationController,
+                              'Lecture Duration', "Duration in minutes "),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            _numberOfLearnersInWeekController,
+                            'Lecture in Week',
+                            "Number of Lectures",
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: _buildTextField(
+                              _priceController, 'Price', "Total Price",
+                              inputType: TextInputType.number),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: _buildTextField(_durationController,
+                                'Duration', "Duration in days")),
+                        SizedBox(width: 16),
+                        Expanded(
+                            child: _buildTextField(_courseLanguageController,
+                                'Course Language', "Course Language")),
+                      ],
+                    ),
+                    _buildDropdownField(
+                        'Course Field',
+                        _courseFields,
+                        _selectedCourseField,
+                        (value) =>
+                            setState(() => _selectedCourseField = value)),
+                    _buildDropdownField(
+                        'Course Level',
+                        _courseLevels,
+                        _selectedCourseLevel,
+                        (value) =>
+                            setState(() => _selectedCourseLevel = value)),
+                    _buildTextField(_requirementsController, 'Requirements',
+                        "What needs to enroll"),
+                    _buildTextField(_afterCourseController,
+                        'After Course Benefits', "Benefits after the course"),
+                    SizedBox(height: 16),
+                    _image == null
+                        ? _buildNoImageSelected()
+                        : Image.file(_image!, height: 150, fit: BoxFit.cover),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _pickImage,
+                      child: Text(
+                        'Pick Image',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        textStyle: TextStyle(fontSize: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    _isUploading
+                        ? Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: _saveCourse,
+                            child: Text(
+                              'Add Course',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              textStyle: TextStyle(fontSize: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                          ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -297,9 +317,9 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.white, fontSize: 12),
+          hintStyle: const TextStyle(color: Colors.black, fontSize: 12),
           labelStyle: const TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -307,14 +327,14 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0), // Rounded corners
             borderSide: const BorderSide(
-              color: Colors.white, // Border color
+              color: Colors.black, // Border color
               width: 2.0, // Border width
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Colors.white, // Border color when enabled
+              color: Colors.black, // Border color when enabled
               width: 2.0, // Border width
             ),
           ),
@@ -341,7 +361,7 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -349,21 +369,21 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0), // Rounded corners
             borderSide: const BorderSide(
-              color: Colors.white, // Border color
+              color: Colors.black, // Border color
               width: 2.0, // Border width
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Colors.white, // Border color when enabled
+              color: Colors.black, // Border color when enabled
               width: 2.0, // Border width
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Colors.white, // Border color when focused
+              color: Colors.black, // Border color when focused
               width: 2.0, // w width
             ),
           ),

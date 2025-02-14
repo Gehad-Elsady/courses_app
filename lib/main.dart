@@ -9,6 +9,7 @@ import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
 import 'package:courses_app/Screens/course%20owner/course_owner_profile.dart';
 import 'package:courses_app/Screens/home/home-screen.dart';
 import 'package:courses_app/Screens/home/tabs/home_tab.dart';
+import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
 import 'package:courses_app/backend/firebase_options.dart';
 import 'package:courses_app/provider/check-user.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         CoursesSearchPage.routeName: (context) => CoursesSearchPage(),
         CourseOwnerProfile.routeName: (context) => CourseOwnerProfile(),
         HomeTab.routeName: (context) => HomeTab(),
+        MyCoursesScreen.routeName: (context) => MyCoursesScreen(),
         // InfoScreen.routeName: (context) => InfoScreen(),
         // AddEng.routeName: (context) => AddEng(),
         // ContactScreen.routeName: (context) => ContactScreen(),

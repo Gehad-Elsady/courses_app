@@ -7,6 +7,7 @@ import 'package:courses_app/Screens/Profile/model/profilemodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseFunctions {
+  //-----------------------------------------User Authentication--------------------------------
   static SignUp(String emailAddress, String password,
       {required Function onSuccess,
       required Function onError,
@@ -83,7 +84,7 @@ class FirebaseFunctions {
   static signOut() {
     FirebaseAuth.instance.signOut();
   }
-  ///////////////////////////
+  //-----------------------------------------User profile--------------------------------
 
   static CollectionReference<ProfileModel> getUserProfileCollection() {
     return FirebaseFirestore.instance
@@ -124,6 +125,8 @@ class FirebaseFunctions {
     });
   }
 
+  //-------------------------------Courses--------------------------------
+
   static Stream<List<CoursesModel>> getCourses() {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -154,6 +157,8 @@ class FirebaseFunctions {
                 data['whatWillYouLearn'] ?? 'No What Will You Learn',
             numberOfLecturesInWeek:
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
+            createdAt: data['createdAt'] ?? 'No Created At',
+            ableToShare: data['ableToShare'] ?? 'No Shared',
           );
         }).toList();
       });
@@ -199,6 +204,8 @@ class FirebaseFunctions {
                 data['whatWillYouLearn'] ?? 'No What Will You Learn',
             numberOfLecturesInWeek:
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
+            createdAt: data['createdAt'] ?? 'No Created At',
+            ableToShare: data['ableToShare'] ?? 'No Shared',
           );
         }).toList();
       });
@@ -286,6 +293,8 @@ class FirebaseFunctions {
                 data['whatWillYouLearn'] ?? 'No What Will You Learn',
             numberOfLecturesInWeek:
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
+            createdAt: data['createdAt'] ?? 'No Created At',
+            ableToShare: data['ableToShare'] ?? 'No Shared',
           );
         }).toList();
       });
@@ -294,6 +303,39 @@ class FirebaseFunctions {
       // Return an empty stream or handle the error more specifically
       return Stream.error(
           'Error fetching courses: $e'); // You can replace this with custom error handling
+    }
+  }
+
+  static Future<void> deleteCourse(Timestamp timestamp) async {
+    final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    if (uid.isEmpty) {
+      print('User is not authenticated.');
+      return;
+    }
+
+    try {
+      // Get the document(s) that match the userId and itemId
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('courses')
+          .where('createdAt', isEqualTo: timestamp)
+          .where('userId',
+              isEqualTo: uid) // Ensure the item belongs to the current user
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('No items found to delete.');
+        return;
+      }
+
+      // Delete each document found
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      print('Courses deleted successfully!');
+    } catch (e) {
+      print('Error deleting Courses: $e');
     }
   }
 
@@ -597,39 +639,6 @@ class FirebaseFunctions {
   //       );
   //     }).toList();
   //   });
-  // }
-
-  // static Future<void> deleteHistoryOrder(int timestamp) async {
-  //   final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-
-  //   if (uid.isEmpty) {
-  //     print('User is not authenticated.');
-  //     return;
-  //   }
-
-  //   try {
-  //     // Get the document(s) that match the userId and itemId
-  //     final querySnapshot = await FirebaseFirestore.instance
-  //         .collection('History')
-  //         .where('timestamp', isEqualTo: timestamp)
-  //         .where('userId',
-  //             isEqualTo: uid) // Ensure the item belongs to the current user
-  //         .get();
-
-  //     if (querySnapshot.docs.isEmpty) {
-  //       print('No items found to delete.');
-  //       return;
-  //     }
-
-  //     // Delete each document found
-  //     for (var doc in querySnapshot.docs) {
-  //       await doc.reference.delete();
-  //     }
-
-  //     print('Service deleted successfully!');
-  //   } catch (e) {
-  //     print('Error deleting service: $e');
-  //   }
   // }
 
   // //-----------------------Add land-----------------------
