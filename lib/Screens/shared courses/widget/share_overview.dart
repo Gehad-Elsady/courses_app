@@ -2,24 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:courses_app/Screens/Add%20courses/model/courses-model.dart';
 import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
 import 'package:courses_app/Screens/payment-scree.dart';
+import 'package:courses_app/Screens/shared%20courses/bottom%20sheet/request_bootomsheet.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Overview extends StatefulWidget {
-  Overview({super.key, required this.courseInfo, this.isShared});
+class SharedOverview extends StatefulWidget {
+  SharedOverview({super.key, required this.courseInfo, this.isShared});
 
   final CoursesModel courseInfo;
   bool? isShared = false;
 
   @override
-  State<Overview> createState() => _OverviewState();
+  State<SharedOverview> createState() => _SharedOverviewState();
 }
 
-class _OverviewState extends State<Overview> {
+class _SharedOverviewState extends State<SharedOverview> {
   String rating = '';
 
   @override
@@ -132,40 +132,20 @@ class _OverviewState extends State<Overview> {
               ),
             ),
             onPressed: () {
-              if (widget.courseInfo.ableToShare == false) {
-                EnrollCoursesModel coursesModel = EnrollCoursesModel(
-                  coursesModel: widget.courseInfo,
-                  userId: FirebaseAuth.instance.currentUser!.uid,
-                  createdAt: Timestamp.now(),
-                );
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentScreen(
-                        totalPrice: double.parse(widget.courseInfo.price),
-                        coursesModel: coursesModel,
-                      ),
-                    ));
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text("Course Details"),
-                          content: Text(widget.courseInfo.courseDuration),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Close"),
-                            ),
-                          ],
-                        ));
-              }
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                isDismissible: true,
+                backgroundColor: Colors.white,
+                builder: (context) {
+                  return RequestBottomSheet(
+                    sharedCours: widget.courseInfo,
+                  );
+                },
+              );
             },
             child: Text(
-              "Enroll Now",
+              "Send Request",
               style: TextStyle(fontSize: 25.0, color: Colors.blue),
             ),
           ),
@@ -238,18 +218,3 @@ class _OverviewState extends State<Overview> {
     );
   }
 }
-
-//  Rating use Stars
-      // RatingBar.builder(
-          //   initialRating: double.parse(courseInfo.rating) ??
-          //       3, // Ensure it comes from courseInfo
-          //   minRating: 1,
-          //   direction: Axis.horizontal,
-          //   allowHalfRating: true,
-          //   itemCount: 5,
-          //   itemBuilder: (context, _) =>
-          //       const Icon(Icons.star, color: Colors.amber),
-          //   onRatingUpdate: (rating) {
-          //     print(rating);
-          //   },
-          // ),

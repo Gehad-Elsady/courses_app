@@ -5,11 +5,16 @@ import 'package:courses_app/Screens/Courses/courses_screen.dart';
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
 import 'package:courses_app/Screens/Search/search_screen.dart';
 import 'package:courses_app/Screens/SplashScreen/splash-screen.dart';
+import 'package:courses_app/Screens/contact/contact-screen.dart';
 import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
 import 'package:courses_app/Screens/course%20owner/course_owner_profile.dart';
 import 'package:courses_app/Screens/home/home-screen.dart';
 import 'package:courses_app/Screens/home/tabs/home_tab.dart';
 import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
+import 'package:courses_app/Screens/my%20requestes/my_requeste.dart';
+import 'package:courses_app/Screens/shared%20courses/shared_courses.dart';
+import 'package:courses_app/Screens/shared%20courses/shares_course_info.dart';
+import 'package:courses_app/Screens/update%20courses/update_courses.dart';
 import 'package:courses_app/backend/firebase_options.dart';
 import 'package:courses_app/provider/check-user.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,12 +53,11 @@ class MyApp extends StatelessWidget {
         CourseOwnerProfile.routeName: (context) => CourseOwnerProfile(),
         HomeTab.routeName: (context) => HomeTab(),
         MyCoursesScreen.routeName: (context) => MyCoursesScreen(),
-        // InfoScreen.routeName: (context) => InfoScreen(),
-        // AddEng.routeName: (context) => AddEng(),
-        // ContactScreen.routeName: (context) => ContactScreen(),
-        // CartScreen.routeName: (context) => CartScreen(),
-        // HistoryScreen.routeName: (context) => HistoryScreen(),
-        // AddLandPage.routeName: (context) => AddLandPage()
+        UpdateCoursesPage.routeName: (context) => UpdateCoursesPage(),
+        ContactScreen.routeName: (context) => ContactScreen(),
+        SharedCourses.routeName: (context) => SharedCourses(),
+        MyRequests.routeName: (context) => MyRequests(),
+        SharesCourseInfoScreen.routeName: (context) => SharesCourseInfoScreen(),
       },
     );
   }

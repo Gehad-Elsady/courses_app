@@ -1,52 +1,74 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:courses_app/Screens/update%20courses/update_courses.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyCoursesScreen extends StatelessWidget {
+class MyCoursesScreen extends StatefulWidget {
   static const String routeName = 'MyCoursesScreen';
   const MyCoursesScreen({super.key});
 
   @override
+  State<MyCoursesScreen> createState() => _MyCoursesScreenState();
+}
+
+class _MyCoursesScreenState extends State<MyCoursesScreen> {
+  bool isSwitched = false; // State variable for switch
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF90E0EF),
+        elevation: 5,
+        shadowColor: Color(0xff03045E),
         centerTitle: true,
         title: Text(
           'My Courses',
+          style: GoogleFonts.domine(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFunctions.getMyCourses(
-            FirebaseAuth.instance.currentUser!.uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No courses found.'));
-          }
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFADE8F4),
+              Color(0xFFCAF0F8),
+              Color(0xFF90E0EF),
+              Color(0xFF90E0EF),
+              Color(0xFF48CAE4),
+            ],
+          ),
+        ),
+        child: StreamBuilder(
+          stream: FirebaseFunctions.getMyCourses(
+              FirebaseAuth.instance.currentUser!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No courses found.'));
+            }
 
-          final courses = snapshot.data!; // Assuming it's a list of courses
+            final courses = snapshot.data!; // Assuming it's a list of courses
 
-          return ListView.builder(
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final course = courses[index];
+            return ListView.builder(
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                final course = courses[index];
 
-              return InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(
-                  //   context,
-                  //   CourseInfoScreen.routeName,
-                  //   arguments: course,
-                  // );
-                },
-                child: Card(
+                return Card(
                   elevation: 10,
                   shadowColor: const Color(0xFF723c70),
                   shape: RoundedRectangleBorder(
@@ -188,11 +210,11 @@ class MyCoursesScreen extends StatelessWidget {
                                   ),
                                 ),
                                 onPressed: () {
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   UpdateServices.routeName,
-                                  //   arguments: service,
-                                  // );
+                                  Navigator.pushNamed(
+                                    context,
+                                    UpdateCoursesPage.routeName,
+                                    arguments: course,
+                                  );
                                 },
                                 child: Text(
                                   "edit",
@@ -206,14 +228,38 @@ class MyCoursesScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Share Course",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                )),
+                            Switch(
+                              value: course.ableToShare,
+                              onChanged: (value) {
+                                setState(() {
+                                  isSwitched = value;
+                                });
+                                FirebaseFunctions.shareCourse(course.createdAt,
+                                    isSwitched, course.userId);
+                              },
+                              activeColor:
+                                  Colors.green, // Color when switched on
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

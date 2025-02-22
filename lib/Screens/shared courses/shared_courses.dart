@@ -1,37 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:courses_app/Screens/Add%20courses/model/courses-model.dart';
 import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
+import 'package:courses_app/Screens/shared%20courses/shares_course_info.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-class CoursesScreen extends StatelessWidget {
-  static const String routeName = 'CoursesScreen';
-  const CoursesScreen({super.key});
+class SharedCourses extends StatelessWidget {
+  static const String routeName = 'shared-courses';
+  const SharedCourses({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String? course =
-        ModalRoute.of(context)?.settings.arguments as String?;
-
-    if (course == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Courses'),
-          centerTitle: true,
-        ),
-        body: const Center(
-          child: Text("Invalid category selection."),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          course,
+          "Shared Courses",
           style: GoogleFonts.domine(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -57,7 +43,7 @@ class CoursesScreen extends StatelessWidget {
           ),
         ),
         child: StreamBuilder<List<CoursesModel>>(
-          stream: FirebaseFunctions.getCategoryCourses(course),
+          stream: FirebaseFunctions.getSharedCourses(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -86,7 +72,7 @@ class CoursesScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.pushNamed(
                       context,
-                      CourseInfoScreen.routeName,
+                      SharesCourseInfoScreen.routeName,
                       arguments: course,
                     );
                   },

@@ -6,6 +6,7 @@ import 'package:courses_app/Screens/home/test.dart';
 import 'package:courses_app/Screens/home/widget/ads_part.dart';
 import 'package:courses_app/Screens/home/widget/categories_part.dart';
 import 'package:courses_app/Screens/home/widget/top_courses_part.dart';
+import 'package:courses_app/Screens/my%20enroll%20courses/my_enroll_courses.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:courses_app/photos/images.dart';
 import 'package:courses_app/widget/Drawer/mydrawer.dart';
@@ -88,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> screens = [
     CoursesSearchPage(),
     HomeTab(),
-    Test1(), // HomeTab is at index 1
+    MyEnrollCourses(), // HomeTab is at index 1
     SettingsTab(),
   ];
 }
