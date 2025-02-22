@@ -1,7 +1,10 @@
 import 'package:courses_app/Screens/Add%20courses/addscoursesscreen.dart';
 import 'package:courses_app/Screens/Auth/login-screen.dart';
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
+import 'package:courses_app/Screens/contact/contact-screen.dart';
 import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
+import 'package:courses_app/Screens/my%20requestes/my_requeste.dart';
+import 'package:courses_app/Screens/shared%20courses/shared_courses.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -94,9 +97,16 @@ class SettingsTab extends StatelessWidget {
                       Navigator.pushNamed(context, MyCoursesScreen.routeName);
                     }),
                     _buildProfileOption(
-                        Icons.request_page, 'My Requests', () {}),
-                    _buildProfileOption(
-                        Icons.contact_mail, 'Contact Us', () {}),
+                        Icons.swap_horizontal_circle_outlined, 'Shared Courses',
+                        () {
+                      Navigator.pushNamed(context, SharedCourses.routeName);
+                    }),
+                    _buildProfileOption(Icons.request_page, 'My Requests', () {
+                      Navigator.pushNamed(context, MyRequests.routeName);
+                    }),
+                    _buildProfileOption(Icons.contact_mail, 'Contact Us', () {
+                      Navigator.pushNamed(context, ContactScreen.routeName);
+                    }),
                     _buildProfileOption(Icons.logout, 'Logout', () async {
                       await FirebaseAuth.instance.signOut();
                       Navigator.pushReplacementNamed(

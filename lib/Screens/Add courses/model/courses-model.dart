@@ -21,7 +21,7 @@ class CoursesModel {
   String courseOwnerImage;
   String numberOfLecturesInWeek;
   Timestamp createdAt;
-  String ableToShare;
+  bool ableToShare;
 
   CoursesModel(
       {required this.name,

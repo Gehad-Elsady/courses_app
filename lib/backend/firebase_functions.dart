@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:courses_app/Screens/Add%20courses/model/courses-model.dart';
 import 'package:courses_app/Screens/Auth/model/usermodel.dart';
 import 'package:courses_app/Screens/Profile/model/profilemodel.dart';
+import 'package:courses_app/Screens/contact/model/contact-model.dart';
+import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
+import 'package:courses_app/Screens/my%20requestes/model/request_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseFunctions {
@@ -339,6 +342,223 @@ class FirebaseFunctions {
     }
   }
 
+  //---------------------------Contact---------------------------
+
+  static Future<void> addProblem(ContactModel problem) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Problem')
+          .doc()
+          .withConverter<ContactModel>(
+        fromFirestore: (snapshot, options) {
+          return ContactModel.fromJson(snapshot.data()!);
+        },
+        toFirestore: (value, options) {
+          return value.toJson();
+        },
+      ).set(problem);
+      print('problem added successfully!');
+    } catch (e) {
+      print('Error adding problem: $e');
+    }
+  }
+
+  //---------------------------Ratings---------------------------
+
+  static Future<void> ratingCourse(
+      Timestamp _createdAt, String rating, String userId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('courses')
+        .where('userId', isEqualTo: userId)
+        .where('createdAt', isEqualTo: _createdAt)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document exists, update it
+      final docId = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance
+          .collection('courses')
+          .doc(docId)
+          .update({'rating': rating});
+    }
+  }
+
+//---------------------------update learners number---------------------------
+  static Future<void> learnersCourseNumber(
+      Timestamp createdAt, String userId) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('courses')
+          .where('userId', isEqualTo: userId)
+          .where('createdAt', isEqualTo: createdAt)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+        final docId = doc.id;
+
+        // Get the current number of learners as String and convert to int
+        int currentLearners =
+            int.tryParse(doc.data()?['numberOfLearners']?.toString() ?? '0') ??
+                0;
+
+        // Increment by 1
+        currentLearners += 1;
+
+        // Update Firestore document with new count as String
+        await FirebaseFirestore.instance
+            .collection('courses')
+            .doc(docId)
+            .update({'numberOfLearners': currentLearners.toString()});
+
+        print('Learners updated successfully to $currentLearners');
+      } else {
+        print('No course found for the provided userId and createdAt.');
+      }
+    } catch (e) {
+      print('Error updating learners count: $e');
+    }
+  }
+
+  //---------------------------Share---------------------------
+  static Future<void> shareCourse(
+      Timestamp _createdAt, bool rating, String userId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('courses')
+        .where('userId', isEqualTo: userId)
+        .where('createdAt', isEqualTo: _createdAt)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document exists, update it
+      final docId = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance
+          .collection('courses')
+          .doc(docId)
+          .update({'ableToShare': rating});
+    }
+  }
+
+  static Stream<List<CoursesModel>> getSharedCourses() {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    try {
+      // Query the collection without any filters
+      return _firestore
+          .collection('courses')
+          .where("ableToShare", isEqualTo: true)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return CoursesModel(
+            userId: data['userId'] ?? "no id",
+            name: data['name'] ?? 'No Name',
+            image: data['image'] ?? 'default_image.png',
+            description: data['description'] ?? 'No Description',
+            price: data['price'] ?? 'No Price',
+            afterCourse: data['afterCourse'] ?? 'No After Course',
+            courseDuration: data['courseDuration'] ?? 'No Course Duration',
+            courseLevel: data['courseLevel'] ?? 'No Course Level',
+            courseField: data['courseField'] ?? 'No Course Field',
+            courseLanguage: data['courseLanguage'] ?? 'No Course Language',
+            courseOwnerName: data['courseOwnerName'] ?? 'No Course Owner Name',
+            requirements: data['requirements'] ?? 'No Requirements',
+            rating: data['rating'] ?? 'No Rating',
+            numberOfLearners: data['numberOfLearners'] ?? 'No Learners',
+            courseOwnerImage: data['courseOwnerImage'] ?? 'default_image.png',
+            lectureDuration: data['lectureDuration'] ?? 'No Lecture Duration',
+            numberOfLectures: data['numberOfLectures'] ?? 'No Lectures',
+            whatWillYouLearn:
+                data['whatWillYouLearn'] ?? 'No What Will You Learn',
+            numberOfLecturesInWeek:
+                data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
+            createdAt: data['createdAt'] ?? 'No Created At',
+            ableToShare: data['ableToShare'] ?? 'No Shared',
+          );
+        }).toList();
+      });
+    } catch (e) {
+      print('Error fetching services: $e');
+      // Return an empty stream or handle the error more specifically
+      return Stream.error(
+          'Error fetching courses: $e'); // You can replace this with custom error handling
+    }
+  }
+  //-------------------------------Enroll the course--------------------------------
+
+  static CollectionReference<EnrollCoursesModel>
+      getUserEnrollCoursesCollection() {
+    return FirebaseFirestore.instance
+        .collection("UsersEnrollCourses")
+        .withConverter<EnrollCoursesModel>(
+      fromFirestore: (snapshot, options) {
+        return EnrollCoursesModel.fromJson(snapshot.data()!);
+      },
+      toFirestore: (user, _) {
+        return user.toJson();
+      },
+    );
+  }
+
+  static Future<void> addEnrollCourse(EnrollCoursesModel course) {
+    var collection = getUserEnrollCoursesCollection();
+    var docRef = collection.doc();
+    return docRef.set(course);
+  }
+
+  static Stream<List<EnrollCoursesModel>> getMyEnrollCourses(String uid) {
+    return FirebaseFirestore.instance
+        .collection('UsersEnrollCourses')
+        .where('userId', isEqualTo: uid)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        return EnrollCoursesModel.fromJson(data);
+      }).toList();
+    }).handleError((e) {
+      print('Error fetching enrolled courses: $e');
+      return <EnrollCoursesModel>[]; // Return an empty list on error
+    });
+  }
+
+//-------------------------------Send shared requests--------------------------------
+  static CollectionReference<RequestModel> sharesCourseRequestCollection() {
+    return FirebaseFirestore.instance
+        .collection("SharesCourseRequest")
+        .withConverter<RequestModel>(
+      fromFirestore: (snapshot, options) {
+        return RequestModel.fromJson(snapshot.data()!);
+      },
+      toFirestore: (user, _) {
+        return user.toJson();
+      },
+    );
+  }
+
+  static Future<void> addSharedRequest(RequestModel course) {
+    var collection = sharesCourseRequestCollection();
+    var docRef = collection.doc();
+    return docRef.set(course);
+  }
+
+  static Stream<List<RequestModel>> getMySharedRequestCourses(String uid) {
+    return FirebaseFirestore.instance
+        .collection('SharesCourseRequest')
+        .where('onwerId', isEqualTo: uid)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        return RequestModel.fromJson(data);
+      }).toList();
+    }).handleError((e) {
+      print('Error fetching enrolled courses: $e');
+      return <RequestModel>[]; // Return an empty list on error
+    });
+  }
+
   // static Stream<List<ServiceModel>> getCrops() {
   //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -413,27 +633,6 @@ class FirebaseFunctions {
   //       );
   //     }).toList();
   //   });
-  // }
-
-  // //---------------------------Contact---------------------------
-
-  // static Future<void> addProblem(ContactModel problem) async {
-  //   try {
-  //     await FirebaseFirestore.instance
-  //         .collection('Problem')
-  //         .doc()
-  //         .withConverter<ContactModel>(
-  //       fromFirestore: (snapshot, options) {
-  //         return ContactModel.fromJson(snapshot.data()!);
-  //       },
-  //       toFirestore: (value, options) {
-  //         return value.toJson();
-  //       },
-  //     ).set(problem);
-  //     print('problem added successfully!');
-  //   } catch (e) {
-  //     print('Error adding problem: $e');
-  //   }
   // }
 
   // //---------------------------Cart---------------------------

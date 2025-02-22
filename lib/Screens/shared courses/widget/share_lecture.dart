@@ -2,18 +2,18 @@ import 'package:courses_app/Screens/Add%20courses/model/courses-model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Lecture extends StatefulWidget {
-  Lecture({
+class SharedLecture extends StatefulWidget {
+  SharedLecture({
     super.key,
     required this.courseInfo,
   });
   final CoursesModel courseInfo;
 
   @override
-  State<Lecture> createState() => _LectureState();
+  State<SharedLecture> createState() => _SharedLectureState();
 }
 
-class _LectureState extends State<Lecture> {
+class _SharedLectureState extends State<SharedLecture> {
   bool isExpanded = false;
 
   @override
