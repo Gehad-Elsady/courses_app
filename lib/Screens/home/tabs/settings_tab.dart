@@ -39,18 +39,65 @@ class SettingsTab extends StatelessWidget {
                 stream: FirebaseFunctions.getUserProfile(
                     FirebaseAuth.instance.currentUser?.uid ?? ''),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData || snapshot.data == null) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error loading profile',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 50.0,
+                        ),
+                        const SizedBox(width: 18.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome to Courses App',
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text(
+                                "User name",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
                   var userData = snapshot.data!;
+
                   return Row(
                     children: [
                       CircleAvatar(
                         radius: 50.0,
-                        backgroundImage: userData.profileImage.isNotEmpty
-                            ? NetworkImage(userData.profileImage)
-                            : const AssetImage('assets/default_profile.png')
-                                as ImageProvider,
+                        backgroundImage:
+                            (userData.profileImage ?? '').isNotEmpty
+                                ? NetworkImage(userData.profileImage)
+                                : const AssetImage('assets/default_profile.png')
+                                    as ImageProvider,
                       ),
                       const SizedBox(width: 18.0),
                       Expanded(
@@ -84,36 +131,58 @@ class SettingsTab extends StatelessWidget {
               const SizedBox(height: 15.0),
               const Divider(color: Colors.grey, thickness: 1.5),
               Expanded(
-                child: ListView(
-                  children: [
-                    _buildProfileOption(Icons.person, 'Profile', () {
-                      Navigator.pushNamed(context, StudentProfile.routeName);
+                child: FutureBuilder(
+                    future: FirebaseFunctions.readUserData(),
+                    builder: (context, snapshot) {
+                      return ListView(
+                        children: [
+                          _buildProfileOption(Icons.person, 'Profile', () {
+                            Navigator.pushNamed(
+                                context, StudentProfile.routeName);
+                          }),
+                          snapshot.data!.role == 'Student'
+                              ? SizedBox()
+                              : _buildProfileOption(
+                                  Icons.my_library_add_outlined, 'Add Courses',
+                                  () {
+                                  Navigator.pushNamed(
+                                      context, AddCoursesPage.routeName);
+                                }),
+                          snapshot.data!.role == 'Student'
+                              ? SizedBox()
+                              : _buildProfileOption(Icons.book, 'My Courses',
+                                  () {
+                                  Navigator.pushNamed(
+                                      context, MyCoursesScreen.routeName);
+                                }),
+                          snapshot.data!.role == 'Student'
+                              ? SizedBox()
+                              : _buildProfileOption(
+                                  Icons.swap_horizontal_circle_outlined,
+                                  'Shared Courses', () {
+                                  Navigator.pushNamed(
+                                      context, SharedCourses.routeName);
+                                }),
+                          snapshot.data!.role == 'Student'
+                              ? SizedBox()
+                              : _buildProfileOption(
+                                  Icons.request_page, 'My Requests', () {
+                                  Navigator.pushNamed(
+                                      context, MyRequests.routeName);
+                                }),
+                          _buildProfileOption(Icons.contact_mail, 'Contact Us',
+                              () {
+                            Navigator.pushNamed(
+                                context, ContactScreen.routeName);
+                          }),
+                          _buildProfileOption(Icons.logout, 'Logout', () async {
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.pushReplacementNamed(
+                                context, LoginPage.routeName);
+                          }),
+                        ],
+                      );
                     }),
-                    _buildProfileOption(
-                        Icons.my_library_add_outlined, 'Add Courses', () {
-                      Navigator.pushNamed(context, AddCoursesPage.routeName);
-                    }),
-                    _buildProfileOption(Icons.book, 'My Courses', () {
-                      Navigator.pushNamed(context, MyCoursesScreen.routeName);
-                    }),
-                    _buildProfileOption(
-                        Icons.swap_horizontal_circle_outlined, 'Shared Courses',
-                        () {
-                      Navigator.pushNamed(context, SharedCourses.routeName);
-                    }),
-                    _buildProfileOption(Icons.request_page, 'My Requests', () {
-                      Navigator.pushNamed(context, MyRequests.routeName);
-                    }),
-                    _buildProfileOption(Icons.contact_mail, 'Contact Us', () {
-                      Navigator.pushNamed(context, ContactScreen.routeName);
-                    }),
-                    _buildProfileOption(Icons.logout, 'Logout', () async {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacementNamed(
-                          context, LoginPage.routeName);
-                    }),
-                  ],
-                ),
               ),
             ],
           ),

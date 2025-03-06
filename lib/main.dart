@@ -11,6 +11,7 @@ import 'package:courses_app/Screens/course%20owner/course_owner_profile.dart';
 import 'package:courses_app/Screens/home/home-screen.dart';
 import 'package:courses_app/Screens/home/tabs/home_tab.dart';
 import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
+import 'package:courses_app/Screens/my%20enroll%20courses/inroll_course_info.dart';
 import 'package:courses_app/Screens/my%20requestes/my_requeste.dart';
 import 'package:courses_app/Screens/shared%20courses/shared_courses.dart';
 import 'package:courses_app/Screens/shared%20courses/shares_course_info.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         SharedCourses.routeName: (context) => SharedCourses(),
         MyRequests.routeName: (context) => MyRequests(),
         SharesCourseInfoScreen.routeName: (context) => SharesCourseInfoScreen(),
+        EnrollCourseInfoScreen.routeName: (context) => EnrollCourseInfoScreen(),
       },
     );
   }

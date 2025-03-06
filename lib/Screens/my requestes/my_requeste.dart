@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
+import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
 import 'package:courses_app/Screens/my%20requestes/model/request_model.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -289,8 +290,50 @@ class MyRequests extends StatelessWidget {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {
-                                      // FirebaseFunctions.acceptRequest(
-                                      //     coursesModel, userId);
+                                      EnrollCoursesModel myCourse =
+                                          EnrollCoursesModel(
+                                              coursesModel:
+                                                  coursesModel.sharedCours,
+                                              userId:
+                                                  coursesModel.myCourse.userId,
+                                              createdAt: coursesModel
+                                                  .sharedCours.createdAt);
+                                      EnrollCoursesModel sharedCourse =
+                                          EnrollCoursesModel(
+                                              coursesModel:
+                                                  coursesModel.myCourse,
+                                              userId: coursesModel
+                                                  .sharedCours.userId,
+                                              createdAt: coursesModel
+                                                  .myCourse.createdAt);
+                                      FirebaseFunctions.acceptSharedRequest(
+                                        myCourse,
+                                        sharedCourse,
+                                      );
+
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Request Accepted'),
+                                              content: Text(
+                                                  'The request has been accepted successfully and the courses have been shared.'),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    FirebaseFunctions
+                                                        .deleteRequestCourse(
+                                                            coursesModel
+                                                                .onwerId,
+                                                            coursesModel
+                                                                .userId);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          });
                                     },
                                     child: Text(
                                       'Accept',
@@ -309,8 +352,29 @@ class MyRequests extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      // FirebaseFunctions.rejectRequest(
-                                      //     coursesModel, userId);
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text('Request Rejected'),
+                                              content: Text(
+                                                  'The request has been rejected successfully.'),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    FirebaseFunctions
+                                                        .deleteRequestCourse(
+                                                            coursesModel
+                                                                .onwerId,
+                                                            coursesModel
+                                                                .userId);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          });
                                     },
                                     child: Text(
                                       'Reject',

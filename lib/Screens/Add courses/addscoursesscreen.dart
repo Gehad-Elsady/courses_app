@@ -34,6 +34,7 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
       TextEditingController();
   final TextEditingController _numberOfLearnersInWeekController =
       TextEditingController();
+  final TextEditingController _courseLinkController = TextEditingController();
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -121,7 +122,9 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           "lectureDuration": _lectureDurationController.text.trim(),
           "numberOfLecturesInWeek":
               _numberOfLearnersInWeekController.text.trim(),
-          "courseOwnerImage": userProfile?.profileImage
+          "courseOwnerImage": userProfile?.profileImage,
+          "ableToShare": false,
+          "sessionLink": _courseLinkController,
         });
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Course added successfully')));
@@ -169,13 +172,6 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           )),
       body: Stack(
         children: [
-          // Image.network(
-          //   "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          //   height: double.infinity,
-          //   width: double.infinity,
-          //   fit: BoxFit.cover,
-          // ),
-          // Container(color: Colors.black.withOpacity(0.5)),
           Container(
             height: MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
@@ -266,6 +262,8 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                         "What needs to enroll"),
                     _buildTextField(_afterCourseController,
                         'After Course Benefits', "Benefits after the course"),
+                    _buildTextField(_courseLinkController,
+                        'Course Link Session', "Course Link Session"),
                     SizedBox(height: 16),
                     _image == null
                         ? _buildNoImageSelected()
