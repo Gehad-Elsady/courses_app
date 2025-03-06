@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       hintText: "Enter your email",
+                      labelText: "Email",
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -103,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       hintText: "Enter your password",
+                      labelText: "Password",
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium

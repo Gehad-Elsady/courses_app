@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   // A simple welcome message with beautiful styling
                   ShaderMask(
                     shaderCallback: (bounds) =>
-                        LinearGradient(colors: [Colors.black, Colors.black])
+                        LinearGradient(colors: [Colors.black, Colors.red, Colors.green, Colors.blue])
                             .createShader(bounds),
                     child: Text(
                       "Welcome to Courses Hub",

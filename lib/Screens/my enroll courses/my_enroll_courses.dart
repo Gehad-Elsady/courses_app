@@ -1,4 +1,5 @@
 import 'package:courses_app/Screens/home/widget/course_item.dart';
+import 'package:courses_app/Screens/my%20enroll%20courses/inroll_course_info.dart';
 import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,7 +61,13 @@ class MyEnrollCourses extends StatelessWidget {
                 final coursesModel = results[index].coursesModel;
                 return Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child: CourseItem(course: coursesModel),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, EnrollCourseInfoScreen.routeName,
+                            arguments: coursesModel);
+                      },
+                      child: CourseItem(course: coursesModel)),
                 );
               },
             );
