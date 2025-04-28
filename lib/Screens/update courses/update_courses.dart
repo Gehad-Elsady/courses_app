@@ -70,6 +70,7 @@ class _UpdateCoursesPageState extends State<UpdateCoursesPage> {
   ];
 
   @override
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve arguments passed to the page

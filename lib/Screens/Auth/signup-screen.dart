@@ -338,6 +338,81 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 15),
+                      Text("OR",
+                          style: TextStyle(fontSize: 20),
+                          textAlign: TextAlign.center),
+                      SizedBox(height: 15),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width, 50),
+                        ),
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            FirebaseFunctions.SignUp(
+                              emailController.text,
+                              passwordController.text,
+                              age: int.parse(ageController.text),
+                              userName: nameController.text,
+                              role: role!,
+                              onSuccess: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Lottie.asset(Photos.create),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            "Please Verify Your Email Address to Login",
+                                            style: TextStyle(fontSize: 20),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                                Timer(
+                                  Duration(seconds: 3),
+                                  () {
+                                    Navigator.pushNamed(
+                                        context, LoginPage.routeName);
+                                  },
+                                );
+                              },
+                              onError: (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: Text(
+                          "Google",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 80),
                       InkWell(
                           onTap: () {

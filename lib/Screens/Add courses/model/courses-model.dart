@@ -22,7 +22,7 @@ class CoursesModel {
   String numberOfLecturesInWeek;
   Timestamp createdAt;
   bool ableToShare;
-  String courseLink;
+  List<String> sessionsLinks;
 
   CoursesModel(
       {required this.name,
@@ -45,7 +45,7 @@ class CoursesModel {
       required this.numberOfLecturesInWeek,
       required this.createdAt,
       required this.ableToShare,
-      required this.courseLink,
+      required this.sessionsLinks,
       required this.price});
   factory CoursesModel.fromJson(Map<dynamic, dynamic> json) => CoursesModel(
         name: json['name'], //
@@ -69,7 +69,7 @@ class CoursesModel {
         numberOfLecturesInWeek: json['numberOfLecturesInWeek'], //
         createdAt: json['createdAt'], //
         ableToShare: json['ableToShare'], //
-        courseLink: json['courseLink'], //
+        sessionsLinks: List<String>.from(json['lectureLinks'] ?? []),
       );
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -93,6 +93,6 @@ class CoursesModel {
         'numberOfLecturesInWeek': numberOfLecturesInWeek,
         'createdAt': createdAt,
         'ableToShare': ableToShare,
-        'courseLink': courseLink,
+        'lectureLinks': sessionsLinks,
       };
 }
