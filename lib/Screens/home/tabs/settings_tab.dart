@@ -44,7 +44,7 @@ class SettingsTab extends StatelessWidget {
                   }
 
                   if (snapshot.hasError) {
-                    return Center(
+                    return const Center(
                       child: Text(
                         'Error loading profile',
                         style: TextStyle(color: Colors.red),
@@ -55,27 +55,25 @@ class SettingsTab extends StatelessWidget {
                   if (!snapshot.hasData || snapshot.data == null) {
                     return Row(
                       children: [
-                        CircleAvatar(
-                          radius: 50.0,
-                        ),
+                        const CircleAvatar(radius: 50.0),
                         const SizedBox(width: 18.0),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: const [
                               Text(
                                 'Welcome to Courses App',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 5.0),
+                              SizedBox(height: 5.0),
                               Text(
                                 "User name",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16.0,
                                   color: Colors.black,
                                 ),
@@ -88,7 +86,6 @@ class SettingsTab extends StatelessWidget {
                   }
 
                   var userData = snapshot.data!;
-
                   return Row(
                     children: [
                       CircleAvatar(
@@ -132,57 +129,80 @@ class SettingsTab extends StatelessWidget {
               const Divider(color: Colors.grey, thickness: 1.5),
               Expanded(
                 child: FutureBuilder(
-                    future: FirebaseFunctions.readUserData(),
-                    builder: (context, snapshot) {
-                      return ListView(
-                        children: [
-                          _buildProfileOption(Icons.person, 'Profile', () {
-                            Navigator.pushNamed(
-                                context, StudentProfile.routeName);
-                          }),
-                          snapshot.data!.role == 'Student'
-                              ? SizedBox()
-                              : _buildProfileOption(
-                                  Icons.my_library_add_outlined, 'Add Courses',
-                                  () {
-                                  Navigator.pushNamed(
-                                      context, AddCoursesPage.routeName);
-                                }),
-                          snapshot.data!.role == 'Student'
-                              ? SizedBox()
-                              : _buildProfileOption(Icons.book, 'My Courses',
-                                  () {
-                                  Navigator.pushNamed(
-                                      context, MyCoursesScreen.routeName);
-                                }),
-                          snapshot.data!.role == 'Student'
-                              ? SizedBox()
-                              : _buildProfileOption(
-                                  Icons.swap_horizontal_circle_outlined,
-                                  'Shared Courses', () {
-                                  Navigator.pushNamed(
-                                      context, SharedCourses.routeName);
-                                }),
-                          snapshot.data!.role == 'Student'
-                              ? SizedBox()
-                              : _buildProfileOption(
-                                  Icons.request_page, 'My Requests', () {
-                                  Navigator.pushNamed(
-                                      context, MyRequests.routeName);
-                                }),
-                          _buildProfileOption(Icons.contact_mail, 'Contact Us',
-                              () {
-                            Navigator.pushNamed(
-                                context, ContactScreen.routeName);
-                          }),
-                          _buildProfileOption(Icons.logout, 'Logout', () async {
-                            await FirebaseAuth.instance.signOut();
-                            Navigator.pushReplacementNamed(
-                                context, LoginPage.routeName);
-                          }),
-                        ],
-                      );
-                    }),
+                  future: FirebaseFunctions.readUserData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError) {
+                      return const Center(
+                          child: Text("Error loading user data"));
+                    }
+
+                    if (!snapshot.hasData || snapshot.data == null) {
+                      return const Center(
+                          child: Text("No user data available"));
+                    }
+
+                    final userData = snapshot.data!;
+                    final isStudent = userData.role == 'Student';
+
+                    return ListView(
+                      children: [
+                        _buildProfileOption(Icons.person, 'Profile', () {
+                          Navigator.pushNamed(
+                              context, StudentProfile.routeName);
+                        }),
+                        if (!isStudent)
+                          _buildProfileOption(
+                            Icons.my_library_add_outlined,
+                            'Add Courses',
+                            () => Navigator.pushNamed(
+                              context,
+                              AddCoursesPage.routeName,
+                            ),
+                          ),
+                        if (!isStudent)
+                          _buildProfileOption(
+                            Icons.book,
+                            'My Courses',
+                            () => Navigator.pushNamed(
+                              context,
+                              MyCoursesScreen.routeName,
+                            ),
+                          ),
+                        if (!isStudent)
+                          _buildProfileOption(
+                            Icons.swap_horizontal_circle_outlined,
+                            'Shared Courses',
+                            () => Navigator.pushNamed(
+                              context,
+                              SharedCourses.routeName,
+                            ),
+                          ),
+                        if (!isStudent)
+                          _buildProfileOption(
+                            Icons.request_page,
+                            'My Requests',
+                            () => Navigator.pushNamed(
+                              context,
+                              MyRequests.routeName,
+                            ),
+                          ),
+                        _buildProfileOption(Icons.contact_mail, 'Contact Us',
+                            () {
+                          Navigator.pushNamed(context, ContactScreen.routeName);
+                        }),
+                        _buildProfileOption(Icons.logout, 'Logout', () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushReplacementNamed(
+                              context, LoginPage.routeName);
+                        }),
+                      ],
+                    );
+                  },
+                ),
               ),
             ],
           ),

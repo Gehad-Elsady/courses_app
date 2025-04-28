@@ -34,7 +34,7 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
       TextEditingController();
   final TextEditingController _numberOfLearnersInWeekController =
       TextEditingController();
-  final TextEditingController _courseLinkController = TextEditingController();
+  final List<TextEditingController> _sectionLinksControllers = [];
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -66,6 +66,23 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
     'Postgraduate',
     'Doctorate'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _numberOfLecturesController.addListener(() {
+      final count = int.tryParse(_numberOfLecturesController.text) ?? 0;
+      if (count != _sectionLinksControllers.length) {
+        setState(() {
+          _sectionLinksControllers.clear();
+          for (int i = 0; i < count; i++) {
+            _sectionLinksControllers.add(TextEditingController());
+          }
+        });
+      }
+    });
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -124,8 +141,10 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
               _numberOfLearnersInWeekController.text.trim(),
           "courseOwnerImage": userProfile?.profileImage,
           "ableToShare": false,
-          "sessionLink": _courseLinkController,
+          "lectureLinks":
+              _sectionLinksControllers.map((e) => e.text.trim()).toList(),
         });
+
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Course added successfully')));
 
@@ -140,11 +159,12 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
         _numberOfLecturesController.clear();
         _lectureDurationController.clear();
         _numberOfLearnersInWeekController.clear();
+        _sectionLinksControllers.clear();
         _image = null;
         _selectedCourseField = null;
         _selectedCourseLevel = null;
+
         Navigator.pushReplacementNamed(context, MyCoursesScreen.routeName);
-        // Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Failed to upload image')));
@@ -156,20 +176,20 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Color(0xFF90E0EF),
-          elevation: 5,
-          shadowColor: Color(0xff03045E),
-          centerTitle: true,
-          title: Text(
-            'Add Course',
-            style: GoogleFonts.domine(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          )),
+        backgroundColor: Color(0xFF90E0EF),
+        elevation: 5,
+        shadowColor: Color(0xff03045E),
+        centerTitle: true,
+        title: Text(
+          'Add Course',
+          style: GoogleFonts.domine(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -192,7 +212,6 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
               child: Form(
                 key: _formKey,
                 child: ListView(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildTextField(
                         _nameController, 'Course Name', "Course Name"),
@@ -205,16 +224,13 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField(
-                            _numberOfLecturesController,
-                            'Number of Lectures',
-                            "Lectures of the Course",
-                          ),
+                          child: _buildTextField(_numberOfLecturesController,
+                              'Number of Lectures', "Lectures of the Course"),
                         ),
                         SizedBox(width: 16),
                         Expanded(
                           child: _buildTextField(_lectureDurationController,
-                              'Lecture Duration', "Duration in minutes "),
+                              'Lecture Duration', "Duration in minutes"),
                         ),
                       ],
                     ),
@@ -222,10 +238,9 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                       children: [
                         Expanded(
                           child: _buildTextField(
-                            _numberOfLearnersInWeekController,
-                            'Lecture in Week',
-                            "Number of Lectures",
-                          ),
+                              _numberOfLearnersInWeekController,
+                              'Lecture in Week',
+                              "Number of Lectures"),
                         ),
                         SizedBox(width: 16),
                         Expanded(
@@ -238,12 +253,14 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                     Row(
                       children: [
                         Expanded(
-                            child: _buildTextField(_durationController,
-                                'Duration', "Duration in days")),
+                          child: _buildTextField(_durationController,
+                              'Duration', "Duration in days"),
+                        ),
                         SizedBox(width: 16),
                         Expanded(
-                            child: _buildTextField(_courseLanguageController,
-                                'Course Language', "Course Language")),
+                          child: _buildTextField(_courseLanguageController,
+                              'Course Language', "Course Language"),
+                        ),
                       ],
                     ),
                     _buildDropdownField(
@@ -262,8 +279,16 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                         "What needs to enroll"),
                     _buildTextField(_afterCourseController,
                         'After Course Benefits', "Benefits after the course"),
-                    _buildTextField(_courseLinkController,
-                        'Course Link Session', "Course Link Session"),
+                    SizedBox(height: 16),
+                    if (_sectionLinksControllers.isNotEmpty)
+                      ...List.generate(
+                        _sectionLinksControllers.length,
+                        (index) => _buildTextField(
+                          _sectionLinksControllers[index],
+                          'Lecture ${index + 1} Link',
+                          'Enter video link for lecture ${index + 1}',
+                        ),
+                      ),
                     SizedBox(height: 16),
                     _image == null
                         ? _buildNoImageSelected()
@@ -271,21 +296,16 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                     SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _pickImage,
-                      child: Text(
-                        'Pick Image',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text('Pick Image',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        textStyle: TextStyle(fontSize: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
+                            borderRadius: BorderRadius.circular(15.0)),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -293,21 +313,16 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
                         ? Center(child: CircularProgressIndicator())
                         : ElevatedButton(
                             onPressed: _saveCourse,
-                            child: Text(
-                              'Add Course',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
+                            child: Text('Add Course',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                               padding: EdgeInsets.symmetric(vertical: 16),
-                              textStyle: TextStyle(fontSize: 16),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
+                                  borderRadius: BorderRadius.circular(15.0)),
                             ),
                           ),
                   ],
@@ -321,8 +336,12 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
   }
 
   Widget _buildTextField(
-      TextEditingController controller, String label, String hintText,
-      {int maxLines = 1, TextInputType inputType = TextInputType.text}) {
+    TextEditingController controller,
+    String label,
+    String hintText, {
+    int maxLines = 1,
+    TextInputType inputType = TextInputType.text,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -334,31 +353,18 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.black, fontSize: 12),
           labelStyle: const TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-          // Define the border
+              color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners
-            borderSide: const BorderSide(
-              color: Colors.black, // Border color
-              width: 2.0, // Border width
-            ),
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(color: Colors.black, width: 2.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.black, // Border color when enabled
-              width: 2.0, // Border width
-            ),
+            borderSide: const BorderSide(color: Colors.black, width: 2.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.blue, // Border color when focused
-              width: 2.0, // Border width
-            ),
+            borderSide: const BorderSide(color: Colors.blue, width: 2.0),
           ),
         ),
         validator: (value) => value!.isEmpty ? 'Please enter $label' : null,
@@ -376,32 +382,16 @@ class _AddCoursesPageState extends State<AddCoursesPage> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          // Define the border
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners
-            borderSide: const BorderSide(
-              color: Colors.black, // Border color
-              width: 2.0, // Border width
-            ),
-          ),
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.black, width: 2.0)),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.black, // Border color when enabled
-              width: 2.0, // Border width
-            ),
-          ),
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.black, width: 2.0)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.black, // Border color when focused
-              width: 2.0, // w width
-            ),
-          ),
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.black, width: 2.0)),
         ),
         value: selectedValue,
         items: items

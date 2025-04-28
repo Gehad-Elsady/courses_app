@@ -162,7 +162,9 @@ class FirebaseFunctions {
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
             createdAt: data['createdAt'] ?? 'No Created At',
             ableToShare: data['ableToShare'] ?? 'No Shared',
-            courseLink: data['courseLink'] ?? 'No Course Link',
+            sessionsLinks: data['lectureLinks'] != null
+                ? List<String>.from(data['lectureLinks'])
+                : [], // Handle lectureLinks as a list of strings
           );
         }).toList();
       });
@@ -210,7 +212,9 @@ class FirebaseFunctions {
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
             createdAt: data['createdAt'] ?? 'No Created At',
             ableToShare: data['ableToShare'] ?? 'No Shared',
-            courseLink: data['courseLink'] ?? 'No Course Link',
+            sessionsLinks: data['lectureLinks'] != null
+                ? List<String>.from(data['lectureLinks'])
+                : [], // Handle lectureLinks as a list of strings
           );
         }).toList();
       });
@@ -300,7 +304,9 @@ class FirebaseFunctions {
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
             createdAt: data['createdAt'] ?? 'No Created At',
             ableToShare: data['ableToShare'] ?? 'No Shared',
-            courseLink: data['courseLink'] ?? 'No Course Link',
+            sessionsLinks: data['lectureLinks'] != null
+                ? List<String>.from(data['lectureLinks'])
+                : [], // Handle sessionsLinks as a list of strings
           );
         }).toList();
       });
@@ -319,7 +325,6 @@ class FirebaseFunctions {
       print('User is not authenticated.');
       return;
     }
-
     try {
       // Get the document(s) that match the userId and itemId
       final querySnapshot = await FirebaseFirestore.instance
@@ -478,7 +483,9 @@ class FirebaseFunctions {
                 data['numberOfLecturesInWeek'] ?? 'No Lectures In Week',
             createdAt: data['createdAt'] ?? 'No Created At',
             ableToShare: data['ableToShare'] ?? 'No Shared',
-            courseLink: data['courseLink'] ?? 'No Course Link',
+            sessionsLinks: data['lectureLinks'] != null
+                ? List<String>.from(data['lectureLinks'])
+                : [], // Handle sessionsLinks as a list of strings
           );
         }).toList();
       });

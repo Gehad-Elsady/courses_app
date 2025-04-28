@@ -29,6 +29,7 @@ class _CourseInfoScreenState extends State<CourseInfoScreen> {
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
                 imageUrl: courseInfo.image,
+                height: 300,
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
                 ),

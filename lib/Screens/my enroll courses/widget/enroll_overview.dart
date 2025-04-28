@@ -1,4 +1,5 @@
 import 'package:courses_app/Screens/Add%20courses/model/courses-model.dart';
+import 'package:courses_app/Screens/content/content_screen.dart';
 import 'package:courses_app/backend/firebase_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -18,127 +19,110 @@ class EnrollOverview extends StatefulWidget {
 class _EnrollOverviewState extends State<EnrollOverview> {
   String rating = '';
 
+  List<String> _sessionsThisWeek() {
+    DateTime startDate =
+        widget.courseInfo.createdAt.toDate(); // Convert Timestamp to DateTime
+    int lecturesPerWeek =
+        int.tryParse(widget.courseInfo.numberOfLecturesInWeek) ?? 1;
+
+    int weeksPassed = DateTime.now().difference(startDate).inDays ~/ 7;
+    int totalSessions = ((weeksPassed + 1) * lecturesPerWeek)
+        .clamp(0, widget.courseInfo.sessionsLinks.length);
+
+    return widget.courseInfo.sessionsLinks.sublist(0, totalSessions);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Course Details
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 30,
-                      ),
-                      const SizedBox(width: 25),
-                      Text(widget.courseInfo.courseDuration,
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff3F3F3F))),
-                    ],
-                  ),
-                  const SizedBox(height: 17),
-                  Row(
-                    children: [
-                      ImageIcon(
-                        AssetImage(
-                            "assets/images/carbon_skill-level-basic.png"),
-                        size: 30,
-                      ),
-                      const SizedBox(width: 25),
-                      Text(widget.courseInfo.courseLevel,
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff3F3F3F))),
-                    ],
-                  ),
-                  const SizedBox(height: 17),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.price_check_rounded,
-                        size: 30,
-                      ),
-                      const SizedBox(width: 25),
-                      Text(widget.courseInfo.price,
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff3F3F3F))),
-                    ],
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _infoRow(Icon(Icons.access_time),
+                        widget.courseInfo.courseDuration),
+                    SizedBox(height: 12),
+                    _infoRow(
+                        ImageIcon(AssetImage(
+                            "assets/images/carbon_skill-level-basic.png")),
+                        widget.courseInfo.courseLevel),
+                    SizedBox(height: 12),
+                    _infoRow(Icon(Icons.price_check_rounded),
+                        widget.courseInfo.price),
+                  ],
+                ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      ImageIcon(
-                        AssetImage("assets/images/training-course.png"),
-                        size: 30,
-                      ),
-                      const SizedBox(width: 25),
-                      Text(widget.courseInfo.courseField,
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff3F3F3F))),
-                    ],
-                  ),
-                  const SizedBox(height: 17),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.language_outlined,
-                        size: 30,
-                      ),
-                      const SizedBox(width: 25),
-                      Text(widget.courseInfo.courseLanguage,
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff3F3F3F))),
-                    ],
-                  ),
-                ],
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _infoRow(
+                        ImageIcon(
+                            AssetImage("assets/images/training-course.png")),
+                        widget.courseInfo.courseField),
+                    SizedBox(height: 12),
+                    _infoRow(Icon(Icons.language_outlined),
+                        widget.courseInfo.courseLanguage),
+                  ],
+                ),
               ),
             ],
           ),
-          SizedBox(
-            height: 40,
-          ),
-          GestureDetector(
-            onTap: () async {
-              final Uri url = Uri.parse(widget.courseInfo.courseLink);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              } else {
-                throw 'Could not launch ';
-              }
-            },
-            child: Text(
-              "Course Sessions Link",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.blue, // Make it look like a link
-                decoration: TextDecoration.underline,
-              ),
+          SizedBox(height: 30),
+
+          // Sessions List
+          Text(
+            'Available Sessions This Week',
+            style: GoogleFonts.roboto(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
-            height: 40,
+          SizedBox(height: 12),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _sessionsThisWeek().length,
+            itemBuilder: (context, index) {
+              final link = _sessionsThisWeek()[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.play_circle_fill),
+                  label: Text("Session ${index + 1}"),
+                  onPressed: () async {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return ContentScreen(
+                            videoUrl: _sessionsThisWeek()[index]);
+                      },
+                    ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey[800],
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
+
+          SizedBox(height: 30),
+
+          // Rating Bar
           Row(
             children: [
               RatingBar.builder(
@@ -165,43 +149,59 @@ class _EnrollOverviewState extends State<EnrollOverview> {
                       return const Icon(Icons.star, color: Colors.grey);
                   }
                 },
-                onRatingUpdate: (rating) {
+                onRatingUpdate: (value) {
                   setState(() {
-                    this.rating = rating.toStringAsFixed(1);
+                    rating = value.toStringAsFixed(1);
                   });
-                  print(rating);
                 },
               ),
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  // Handle rating logic
-                  FirebaseFunctions.ratingCourse(widget.courseInfo.createdAt,
-                      rating, widget.courseInfo.userId);
+                  FirebaseFunctions.ratingCourse(
+                    widget.courseInfo.createdAt,
+                    rating,
+                    widget.courseInfo.userId,
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Course Rated successfully')));
-
-                  print(rating);
+                    SnackBar(content: Text('Course rated successfully')),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Button color
-                  foregroundColor: Colors.white, // Text color
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 12), // Padding
-                  textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold), // Font styling
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12), // Rounded corners
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  elevation: 5, // Shadow effect
+                  elevation: 5,
                 ),
                 child: const Text("Rate Now"),
               )
             ],
-          )
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _infoRow(Widget icon, String text) {
+    return Row(
+      children: [
+        icon is Icon ? icon : icon as Widget,
+        SizedBox(width: 16),
+        Flexible(
+          child: Text(
+            text,
+            style: GoogleFonts.roboto(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xff3F3F3F),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -29,6 +29,7 @@ class _EnrollCourseInfoScreenState extends State<EnrollCourseInfoScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
+                height: 300,
                 imageUrl: courseInfo.image,
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
