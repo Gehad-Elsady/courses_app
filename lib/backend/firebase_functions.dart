@@ -7,6 +7,7 @@ import 'package:courses_app/Screens/Profile/model/profilemodel.dart';
 import 'package:courses_app/Screens/contact/model/contact-model.dart';
 import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
 import 'package:courses_app/Screens/my%20requestes/model/request_model.dart';
+import 'package:courses_app/notifications/model/notification_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseFunctions {
@@ -87,7 +88,23 @@ class FirebaseFunctions {
   static signOut() {
     FirebaseAuth.instance.signOut();
   }
+
   //-----------------------------------------User profile--------------------------------
+  static Future<Map<String, ProfileModel>> getUsersByIds(
+      List<String> userIds) async {
+    final usersMap = <String, ProfileModel>{};
+    if (userIds.isEmpty) return usersMap;
+
+    final query = await FirebaseFirestore.instance
+        .collection('UsersProfile')
+        .where(FieldPath.documentId, whereIn: userIds)
+        .get();
+
+    for (final doc in query.docs) {
+      usersMap[doc.id] = ProfileModel.fromJson(doc.data());
+    }
+    return usersMap;
+  }
 
   static CollectionReference<ProfileModel> getUserProfileCollection() {
     return FirebaseFirestore.instance
@@ -616,5 +633,40 @@ class FirebaseFunctions {
     } catch (e) {
       print('Error deleting course: $e');
     }
+  }
+
+  static Future<void> addDeviceTokens(NotificationModel token) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('UserTokens')
+          .doc(token.id)
+          .withConverter<NotificationModel>(
+        fromFirestore: (snapshot, options) {
+          return NotificationModel.fromJson(snapshot.data()!);
+        },
+        toFirestore: (value, options) {
+          return value.toJson();
+        },
+      ).set(token);
+      print('token added successfully!');
+    } catch (e) {
+      print('Error adding token: $e');
+    }
+  }
+
+  static Stream<String?> getUserDeviceTokenStream(String userId) {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    return _firestore
+        .collection('UserTokens')
+        .doc(
+            userId) // Directly reference the document with the userId as the document ID.
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        return data['deviceToken'] as String?; // Return the deviceToken field.
+      }
+      return null; // Return null if the document does not exist.
+    });
   }
 }
