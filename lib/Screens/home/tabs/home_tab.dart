@@ -1,5 +1,6 @@
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
 import 'package:courses_app/Screens/Search/search_screen.dart';
+import 'package:courses_app/Screens/chat/chat_home.dart';
 import 'package:courses_app/Screens/home/home-screen.dart';
 import 'package:courses_app/Screens/home/widget/ads_part.dart';
 import 'package:courses_app/Screens/home/widget/categories_part.dart';
@@ -48,6 +49,14 @@ class _HomeTabState extends State<HomeTab> {
         elevation: 5,
         shadowColor: Color(0xff03045E),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.chat_bubble_rounded),
+            onPressed: () {
+              Navigator.pushNamed(context, ChatHome.routeName);
+            },
+          ),
+        ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

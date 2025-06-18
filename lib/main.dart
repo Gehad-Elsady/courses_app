@@ -5,6 +5,8 @@ import 'package:courses_app/Screens/Courses/courses_screen.dart';
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
 import 'package:courses_app/Screens/Search/search_screen.dart';
 import 'package:courses_app/Screens/SplashScreen/splash-screen.dart';
+import 'package:courses_app/Screens/chat/chat_home.dart';
+import 'package:courses_app/Screens/chat/messages_screen.dart';
 import 'package:courses_app/Screens/contact/contact-screen.dart';
 import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
 import 'package:courses_app/Screens/course%20owner/course_owner_profile.dart';
@@ -60,6 +62,8 @@ class MyApp extends StatelessWidget {
         MyRequests.routeName: (context) => MyRequests(),
         SharesCourseInfoScreen.routeName: (context) => SharesCourseInfoScreen(),
         EnrollCourseInfoScreen.routeName: (context) => EnrollCourseInfoScreen(),
+        ChatHome.routeName: (context) => ChatHome(),
+        // MessagesScreen.routeName: (context) => MessagesScreen(),
       },
     );
   }

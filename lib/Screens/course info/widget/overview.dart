@@ -132,7 +132,6 @@ class _OverviewState extends State<Overview> {
               ),
             ),
             onPressed: () {
-              if (widget.courseInfo.ableToShare == false) {
                 EnrollCoursesModel coursesModel = EnrollCoursesModel(
                   coursesModel: widget.courseInfo,
                   userId: FirebaseAuth.instance.currentUser!.uid,
@@ -147,22 +146,7 @@ class _OverviewState extends State<Overview> {
                         coursesModel: coursesModel,
                       ),
                     ));
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text("Course Details"),
-                          content: Text(widget.courseInfo.courseDuration),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Close"),
-                            ),
-                          ],
-                        ));
-              }
+              
             },
             child: Text(
               "Enroll Now",
