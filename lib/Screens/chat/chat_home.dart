@@ -47,8 +47,13 @@ class ChatHome extends StatelessWidget {
 
               for (var doc in chatDocs) {
                 final users = List<String>.from(doc['users']);
-                final otherUserId = users.firstWhere((id) => id != currentUser.uid);
-                chatUserIds.add(otherUserId);
+                final otherUserId = users.firstWhere(
+                  (id) => id != currentUser.uid,
+                  orElse: () => '',
+                );
+                if (otherUserId.isNotEmpty) {
+                  chatUserIds.add(otherUserId);
+                }
               }
 
               final allUserIds = {...enrolledUserIds, ...chatUserIds}.toList();
@@ -125,7 +130,6 @@ class ChatHome extends StatelessWidget {
                                           lastMessageTime,
                                           style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                                         ),
-                                  
                                     ],
                                   ),
                                 ],

@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Colors.blue
                     ]).createShader(bounds),
                     child: Text(
-                      "Welcome to Courses Hub",
+                      "Welcome to SkillMart",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 24.0,
