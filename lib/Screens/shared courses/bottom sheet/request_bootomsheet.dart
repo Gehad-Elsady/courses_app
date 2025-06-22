@@ -21,17 +21,6 @@ class RequestBottomSheet extends StatelessWidget {
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFADE8F4),
-            Color(0xFFCAF0F8),
-            Color(0xFF90E0EF),
-            Color(0xFF90E0EF),
-            Color(0xFF48CAE4),
-          ],
-        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min, // Allows flexible height

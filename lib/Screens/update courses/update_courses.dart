@@ -206,7 +206,7 @@ class _UpdateCoursesPageState extends State<UpdateCoursesPage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Color(0xFF90E0EF),
+          backgroundColor: Colors.white,
           elevation: 5,
           shadowColor: Color(0xff03045E),
           centerTitle: true,
@@ -229,19 +229,7 @@ class _UpdateCoursesPageState extends State<UpdateCoursesPage> {
           // Container(color: Colors.black.withOpacity(0.5)),
           Container(
             height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFADE8F4),
-                  Color(0xFFCAF0F8),
-                  Color(0xFF90E0EF),
-                  Color(0xFF90E0EF),
-                  Color(0xFF48CAE4),
-                ],
-              ),
-            ),
+         
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -427,7 +415,7 @@ class _UpdateCoursesPageState extends State<UpdateCoursesPage> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Colors.blue, // Border color when focused
+              color: Color(0xFF6E5DE7), // Border color when focused
               width: 2.0, // Border width
             ),
           ),
@@ -443,7 +431,7 @@ class _UpdateCoursesPageState extends State<UpdateCoursesPage> {
       padding: const EdgeInsets.only(bottom: 16),
       child: DropdownButtonFormField<String>(
         style: TextStyle(color: Colors.black, fontSize: 18),
-        dropdownColor: Color(0xFF90E0EF),
+        dropdownColor:  Color(0xFF6E5DE7),
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(

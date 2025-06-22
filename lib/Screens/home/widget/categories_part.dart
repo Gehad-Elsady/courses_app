@@ -129,6 +129,7 @@ class CtigoriesItem extends StatelessWidget {
           Image.asset(
             icon,
             height: 40,
+            color: Color(0xFF6E5DE7),
           )
         ],
       ),

@@ -81,25 +81,13 @@ class _StudentProfileState extends State<StudentProfile> {
               fontSize: 35,
               fontWeight: FontWeight.bold,
             )),
-        backgroundColor: Color(0xFF90E0EF),
+        backgroundColor: Colors.white,
         elevation: 5,
         shadowColor: Color(0xff03045E),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFADE8F4),
-              Color(0xFFCAF0F8),
-              Color(0xFF90E0EF),
-              Color(0xFF90E0EF),
-              Color(0xFF48CAE4),
-            ],
-          ),
-        ),
+      
         child: StreamBuilder(
           stream: FirebaseFunctions.getUserProfile(
               FirebaseAuth.instance.currentUser!.uid),
@@ -183,7 +171,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: const BorderSide(
-                          color: Colors.blue, // Border color when focused
+                          color: Color(0xFF6E5DE7), // Border color when focused
                           width: 2.0, // Border width
                         ),
                       ),
@@ -222,7 +210,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: const BorderSide(
-                          color: Colors.blue, // Border color when focused
+                          color:  Color(0xFF6E5DE7), // Border color when focused
                           width: 2.0, // Border width
                         ),
                       ),
@@ -261,7 +249,7 @@ class _StudentProfileState extends State<StudentProfile> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(
-                    color: Colors.blue, // Border color when focused
+                    color: Color(0xFF6E5DE7), // Border color when focused
                     width: 2.0, // Border width
                   ),
                 ),
@@ -296,7 +284,7 @@ class _StudentProfileState extends State<StudentProfile> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(
-                    color: Colors.blue, // Border color when focused
+                    color: Color(0xFF6E5DE7), // Border color when focused
                     width: 2.0, // Border width
                   ),
                 ),
@@ -331,7 +319,7 @@ class _StudentProfileState extends State<StudentProfile> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(
-                    color: Colors.blue, // Border color when focused
+                    color: Color(0xFF6E5DE7), // Border color when focused
                     width: 2.0, // Border width
                   ),
                 ),
@@ -367,7 +355,7 @@ class _StudentProfileState extends State<StudentProfile> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(
-                    color: Colors.blue, // Border color when focused
+                    color: Color(0xFF6E5DE7), // Border color when focused
                     width: 2.0, // Border width
                   ),
                 ),
@@ -405,7 +393,7 @@ class _StudentProfileState extends State<StudentProfile> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: const BorderSide(
-                    color: Colors.blue, // Border color when focused
+                    color: Color(0xFF6E5DE7), // Border color when focused
                     width: 2.0, // Border width
                   ),
                 ),
@@ -450,7 +438,7 @@ class _StudentProfileState extends State<StudentProfile> {
                     backgroundColor: Colors.green,
                     shape: const StadiumBorder(),
                     side: const BorderSide(
-                      color: Colors.blue,
+                      color: Color(0xFF6E5DE7),
                       width: 2,
                     ),
                   ),
