@@ -54,7 +54,7 @@ class _ContentScreenState extends State<ContentScreen> {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Session Video"),
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.white,
             elevation: 4,
             centerTitle: true,
           ),
@@ -70,11 +70,11 @@ class _ContentScreenState extends State<ContentScreen> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.redAccent,
+            backgroundColor:  Color(0xFF6E5DE7),
             onPressed: () {
               _controller.toggleFullScreenMode();
             },
-            child: const Icon(Icons.fullscreen),
+            child: const Icon(Icons.fullscreen,color: Colors.white,),
           ),
         );
       },

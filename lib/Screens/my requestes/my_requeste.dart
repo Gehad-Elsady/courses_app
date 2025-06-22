@@ -25,25 +25,14 @@ class MyRequests extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        backgroundColor: Color(0xFF90E0EF),
+        backgroundColor: Colors.white,
         elevation: 5,
         shadowColor: Color(0xff03045E),
         centerTitle: true,
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFADE8F4),
-              Color(0xFFCAF0F8),
-              Color(0xFF90E0EF),
-              Color(0xFF48CAE4),
-            ],
-          ),
-        ),
+       
         child: userId == null
             ? const Center(
                 child: Text('User not logged in',
@@ -82,7 +71,7 @@ class MyRequests extends StatelessWidget {
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(
                       child: Text(
-                        'No enrolled courses found',
+                        'No Request courses found',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),

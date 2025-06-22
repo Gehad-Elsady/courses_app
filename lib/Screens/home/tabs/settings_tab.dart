@@ -17,18 +17,7 @@ class SettingsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFADE8F4),
-              Color(0xFFCAF0F8),
-              Color(0xFF90E0EF),
-              Color(0xFF48CAE4),
-            ],
-          ),
-        ),
+        
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -215,7 +204,7 @@ class SettingsTab extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: const Color(0xff03045E),
+        color: const Color(0xFF6E5DE7),
         size: 28,
       ),
       title: Text(

@@ -19,7 +19,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF90E0EF),
+        backgroundColor: Colors.white,
         elevation: 5,
         shadowColor: Color(0xff03045E),
         centerTitle: true,
@@ -34,19 +34,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFADE8F4),
-              Color(0xFFCAF0F8),
-              Color(0xFF90E0EF),
-              Color(0xFF90E0EF),
-              Color(0xFF48CAE4),
-            ],
-          ),
-        ),
+      
         child: StreamBuilder(
           stream: FirebaseFunctions.getMyCourses(
               FirebaseAuth.instance.currentUser!.uid),

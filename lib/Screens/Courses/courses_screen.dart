@@ -38,24 +38,13 @@ class CoursesScreen extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        backgroundColor: Color(0xFF90E0EF),
+        backgroundColor: Colors.white,
         elevation: 5,
         shadowColor: Color(0xff03045E),
         centerTitle: true,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFADE8F4),
-              Color(0xFFCAF0F8),
-              Color(0xFF90E0EF),
-              Color(0xFF48CAE4),
-            ],
-          ),
-        ),
+      
         child: StreamBuilder<List<CoursesModel>>(
           stream: FirebaseFunctions.getCategoryCourses(course),
           builder: (context, snapshot) {

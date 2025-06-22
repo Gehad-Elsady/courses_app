@@ -41,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: WaterDropNavBar(
           bottomPadding: 15,
           iconSize: 30,
-          waterDropColor: Color(0xFF48CAE4),
-          backgroundColor: Color(0xff023E8A),
+          waterDropColor: Color(0xFF6E5DE7),
+          backgroundColor: Colors.white,
           onItemSelected: (index) {
             setState(() {
               selectedIndex = index;
