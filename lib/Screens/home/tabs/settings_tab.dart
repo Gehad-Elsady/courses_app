@@ -51,7 +51,7 @@ class SettingsTab extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
                               Text(
-                                'Welcome to Courses App',
+                                'Welcome to SkillMart',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
