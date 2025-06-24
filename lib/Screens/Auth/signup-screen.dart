@@ -213,18 +213,23 @@ We're excited to have you join our learning community!
                 const SizedBox(height: 32),
                 
                 // Title
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    'Create your account',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
+                Align(
+  alignment: Alignment.center,
+  child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.0),
+    child: Text(
+      'Create your account',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        height: 1.3,
+      ),
+    ),
+  ),
+),
+
+             
                 const SizedBox(height: 40),
 
                 // Role Selection
@@ -409,10 +414,11 @@ We're excited to have you join our learning community!
           if (value == null || value.isEmpty) {
             return 'Please enter a password';
           }
-          if (value.length < 6) {
-            return 'Password must be at least 6 characters';
-          }
-          return null;
+           final regex = RegExp(
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                          );
+                          return regex.hasMatch(value)  ? null
+                              : "Password must include an uppercase letter, a number, and a special character";
         },
       ),
     );
