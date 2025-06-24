@@ -96,18 +96,22 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 32),
                 
                 // Title
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    'Log in to continue your\nlearning journey',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
+               Align(
+  alignment: Alignment.center,
+  child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.0),
+    child: Text(
+      'Log in to continue your\nlearning journey',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        height: 1.3,
+      ),
+    ),
+  ),
+),
+
                 const SizedBox(height: 40),
 
                 // Email Field
