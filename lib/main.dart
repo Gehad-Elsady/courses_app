@@ -11,6 +11,7 @@ import 'package:courses_app/Screens/contact/contact-screen.dart';
 import 'package:courses_app/Screens/course%20info/course_info_screen.dart';
 import 'package:courses_app/Screens/course%20owner/course_owner_profile.dart';
 import 'package:courses_app/Screens/home/home-screen.dart';
+import 'package:courses_app/Screens/home/payment_methods_screen.dart';
 import 'package:courses_app/Screens/home/tabs/home_tab.dart';
 import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
 import 'package:courses_app/Screens/my%20enroll%20courses/inroll_course_info.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         SharesCourseInfoScreen.routeName: (context) => SharesCourseInfoScreen(),
         EnrollCourseInfoScreen.routeName: (context) => EnrollCourseInfoScreen(),
         ChatHome.routeName: (context) => ChatHome(),
+        PaymentMethodsScreen.routeName: (context) => PaymentMethodsScreen(),
         // MessagesScreen.routeName: (context) => MessagesScreen(),
       },
     );

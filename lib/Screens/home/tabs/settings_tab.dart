@@ -2,6 +2,7 @@ import 'package:courses_app/Screens/Add%20courses/addscoursesscreen.dart';
 import 'package:courses_app/Screens/Auth/login-screen.dart';
 import 'package:courses_app/Screens/Profile/student-profile-screen.dart';
 import 'package:courses_app/Screens/contact/contact-screen.dart';
+import 'package:courses_app/Screens/home/payment_methods_screen.dart';
 import 'package:courses_app/Screens/my%20courses/my_courses_screen.dart';
 import 'package:courses_app/Screens/my%20requestes/my_requeste.dart';
 import 'package:courses_app/Screens/shared%20courses/shared_courses.dart';
@@ -17,7 +18,6 @@ class SettingsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -159,6 +159,15 @@ class SettingsTab extends StatelessWidget {
                             () => Navigator.pushNamed(
                               context,
                               MyCoursesScreen.routeName,
+                            ),
+                          ),
+                        if (!isStudent)
+                          _buildProfileOption(
+                            Icons.book,
+                            'Money Transfer',
+                            () => Navigator.pushNamed(
+                              context,
+                              PaymentMethodsScreen.routeName,
                             ),
                           ),
                         if (!isStudent)
