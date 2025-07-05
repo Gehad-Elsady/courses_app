@@ -7,6 +7,7 @@ import 'package:courses_app/Screens/Profile/model/profilemodel.dart';
 import 'package:courses_app/Screens/contact/model/contact-model.dart';
 import 'package:courses_app/Screens/my%20enroll%20courses/model/enroll_courses_model.dart';
 import 'package:courses_app/Screens/my%20requestes/model/request_model.dart';
+import 'package:courses_app/models/payment_method.dart';
 import 'package:courses_app/notifications/model/notification_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -668,5 +669,85 @@ class FirebaseFunctions {
       }
       return null; // Return null if the document does not exist.
     });
+  }
+
+  ///-------------------------------
+  static CollectionReference<PaymentMethod> getPaymentMethodsCollection() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      throw Exception('User not authenticated');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('paymentMethods')
+        .withConverter<PaymentMethod>(
+          fromFirestore: PaymentMethod.fromFirestore,
+          toFirestore: (PaymentMethod method, _) => method.toFirestore(),
+        );
+  }
+
+  static Future<void> addPaymentMethod(PaymentMethod method) async {
+    final collection = getPaymentMethodsCollection();
+
+    // If setting as default, unset any existing default
+    if (method.isDefault) {
+      await _unsetExistingDefault();
+    }
+
+    await collection.add(method);
+  }
+
+  static Future<List<PaymentMethod>> getUserPaymentMethods() async {
+    try {
+      final snapshot = await getPaymentMethodsCollection()
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      print('Error getting payment methods: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> setDefaultPaymentMethod(String methodId) async {
+    final collection = getPaymentMethodsCollection();
+
+    // Start a batch to ensure atomic updates
+    final batch = FirebaseFirestore.instance.batch();
+
+    // First, unset any existing default
+    final existingDefaults =
+        await collection.where('isDefault', isEqualTo: true).get();
+    for (var doc in existingDefaults.docs) {
+      batch.update(doc.reference, {'isDefault': false});
+    }
+
+    // Then set the new default
+    batch.update(collection.doc(methodId), {'isDefault': true});
+
+    await batch.commit();
+  }
+
+  static Future<void> _unsetExistingDefault() async {
+    try {
+      final collection = getPaymentMethodsCollection();
+      final existingDefaults =
+          await collection.where('isDefault', isEqualTo: true).get();
+
+      final batch = FirebaseFirestore.instance.batch();
+      for (var doc in existingDefaults.docs) {
+        batch.update(doc.reference, {'isDefault': false});
+      }
+
+      if (existingDefaults.docs.isNotEmpty) {
+        await batch.commit();
+      }
+    } catch (e) {
+      print('Error unsetting default payment method: $e');
+      rethrow;
+    }
   }
 }
